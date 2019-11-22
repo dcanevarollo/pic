@@ -1,4 +1,4 @@
-MPASM 5.86                       PROGRAM.ASM   11-7-2019  20:16:44         PAGE  1
+MPASM 5.86                       PROGRAM.ASM   11-21-2019  22:38:20         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -12,11 +12,12 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00006 ;
                       00007 ; Microcontrolador PIC18F873A, clock de 4MHz.
                       00008     
-                      00009     list p=16F873A  ; Informa ao compilador o microcontrolador utilizado.
-                      00010     
-                      00011 ;
-                      00012     
-                      00013     #include <p16f873a.inc> ; Inclui algumas config. padrões do PIC18F873A.
+                      00009         list        p=16F873A       ; Informa ao compilador o microcontrolador 
+                      00010                                     ; utilizado.
+                      00011     
+                      00012 ;
+                      00013     
+                      00014         #include    <p16f873a.inc>  ; Inclui algumas configurações padrões do 
                       00001         LIST
                       00002 
                       00003 ;==========================================================================
@@ -27,139 +28,184 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00008 ;==========================================================================
                       00009 
                       00527         LIST
-                      00014     
-                      00015 ; FUSE bits:
-                      00016 ; Cristal oscilador de 4MHz, sem watchdog, com powerup e sem prot. de código.
-2007   3FF1           00017     __CONFIG _XT_OSC & _WDT_OFF & _PWRTE_ON & _CP_OFF
-                      00018     
-                      00019 ; Definição de aliases.
-                      00020 
-Warning[207]: Found label after column 1. (COUNTER)
-  00000020            00021     COUNTER         EQU H'20'   ; Contador auxiliar.
-Warning[207]: Found label after column 1. (HUNDRED)
-  00000021            00022     HUNDRED         EQU H'21'   ; Dígito da centena.
-Warning[207]: Found label after column 1. (DOZEN)
-  00000022            00023     DOZEN           EQU H'22'   ; Dígito da dezena.
-Warning[207]: Found label after column 1. (UNITY)
-  00000023            00024     UNITY           EQU H'23'   ; Dígito da unidade.
-Warning[207]: Found label after column 1. (DELCUT1MS)
-  00000024            00025     DELCUT1MS       EQU H'24'   ; Contador do timer de 1 ms.
-Warning[207]: Found label after column 1. (DELCUT1S)
-  00000025            00026     DELCUT1S        EQU H'25'   ; Contador do timer de 1 s.
-                      00027     
-                      00028 ;
+                      00015                                     ; PIC18F873A.
+                      00016     
+                      00017 ; FUSE bits:
+                      00018 ; Cristal oscilador de 4MHz, sem watchdog, com powerup e sem prot. de código.
+2007   3FF1           00019         __CONFIG    _XT_OSC & _WDT_OFF & _PWRTE_ON & _CP_OFF
+                      00020     
+                      00021 ;
+                      00022 ; Definição do vetor de reset.
+                      00023         org         H'0000'     ; Origem do código principal.
+0000   2???           00024         goto        start
+                      00025         
+                      00026 ; Definição de aliases.
+                      00027 
+                      00028         cblock      H'20'
                       00029     
-                      00030     org     H'0000'     ; Origem do código principal.
-0000   2???           00031     goto    start
-                      00032 
-                      00033 ;
-                      00034 ; Configurações dos bancos e portas de E/S.
-0001                  00035 start:
-0001   1303           00036     bcf     STATUS, RP1
-0002   1683           00037     bsf     STATUS, RP0 ; Seleciona o banco 1.
-MPASM 5.86                       PROGRAM.ASM   11-7-2019  20:16:44         PAGE  2
+  00000020            00030         TEMP                    ; Armazenará o valor recebido pela porta B.
+  00000021            00031         HUNDRED                 ; Contador da centena.
+  00000022            00032         DOZEN                   ; Contador da dezena.
+  00000023            00033         UNITY                   ; Contador da unidade.
+  00000024            00034         DELCUT1MS               ; Contador do timer de 1 ms.
+  00000025            00035         DELCUT1S                ; Contador do timer de 1 s.
+                      00036         
+                      00037         endc
+                      00038 
+                      00039 ;
+                      00040 ; Configurações dos bancos e portas de E/S.
+0001                  00041 start:
+0001   1683           00042         bsf         STATUS, RP0 ; Seleciona o banco 1.
+0002   3006           00043         movlw       B'0110'
+MPASM 5.86                       PROGRAM.ASM   11-21-2019  22:38:20         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0003   3006           00038     movlw   B'0110'
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0004   009F           00039     movwf   ADCON1      ; Utiliza sinais digitais de entrada.
-0005   30FF           00040     movlw   B'11111111'
+0003   009F           00044         movwf       ADCON1      ; Utiliza sinais digitais de entrada.
+0004   30FF           00045         movlw       B'11111111'
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0006   0086           00041     movwf   TRISB       ; Todos os 8 bits da porta B serão usados como entrada.
-0007   3000           00042     movlw   B'00000000'
+0005   0086           00046         movwf       TRISB       ; Todos os 8 bits da porta B serão usados como 
+                      00047                                 ; entrada.
+0006   3000           00048         movlw       B'00000000'
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0008   0085           00043     movwf   TRISA       ; Todos os 5 bits da porta A serão usados como saída.
-0009   1283           00044     bcf     STATUS, RP0 ; Seleciona o banco 0.
-                      00045 ;
-                      00046 ; Aplicação principal inicia agora.
-000A                  00047 init:
-Error[113]  : Symbol not previously defined (delay2s)
-000A   2000           00048     call    delay2s     ; Aguarda 2 segundos.
-000B   30D7           00049     movlw   D'215'      ; O "sensor" envia o número entre 0 a 255.
-000C   0086           00050     movwf   PORTB       ; Esse número é armazenado na porta B.
-                      00051 ;
-                      00052 ; Como não podemos utilizar D'-1', passamos o binário 1111 ao contador. Ao rece-
-                      00053 ; ber um incremento os 4 primeiros bits serão zerados (1111 + 0001 = 1 0000).
-                      00054 ; Portanto, quando incrementarmos, zeramos o bit 4 para evitar problemas.
-000D   300F           00055     movlw   B'1111'
-000E   00A0           00056     movwf   COUNTER     ; Inicializa o contador em -1.
-                      00057 ;
-                      00058 ; Ciclo de definição da centena.
-                      00059 ; A cada ciclo, subtrai 100 do valor original e incrementa o contador até que
-                      00060 ; ocorra um carry no registrador STATUS, ou seja, a centena já foi totalmente
-                      00061 ; contada. Por exemplo, 255 entrará no laço 2 vezes e o contador será incremen-
-                      00062 ; 2 vezes. Logo, o reg. da centena armazenará o valor 2.
-000F                  00063 hund:
-000F   0AA0           00064     incf    COUNTER, 1  ; Incrementa o contador.
-0010   1220           00065     bcf     COUNTER, 4  ; Zera o bit onde o carry ocorreu.
-0011   3064           00066     movlw   D'100'      ; W = 100.
-0012   0286           00067     subwf   PORTB, 1    ; Porta B = Porta B - W = Porta B - 100.
-0013   1C03           00068     btfss   STATUS, C   ; Se o bit de carry estiver setado, pula o laço.
-0014   2???           00069     goto    hund
-0015   0820           00070     movf    COUNTER, 0  ; Move o conteúdo do contador para o reg. W.
-0016   00A1           00071     movwf   HUNDRED     ; Move o conteúdo do reg. W para o reg. da centena.
-0017   3064           00072     movlw   D'100'
-0018   0786           00073     addwf   PORTB, 1    ; Recoloca a centena na entrada para os próximos cálculos.
-                      00074 ;
-0019   300F           00075     movlw   B'1111'
-001A   00A0           00076     movwf   COUNTER     ; Reinicia o contador.
-                      00077 ;
-                      00078 ; Ciclo de definição da dezena.
-                      00079 ; Segue a mesma lógica da centena.
-001B                  00080 doz:
-001B   0AA0           00081     incf    COUNTER, 1
-001C   1220           00082     bcf     COUNTER, 4
-001D   300A           00083     movlw   D'10'
-001E   0286           00084     subwf   PORTB, 1
-001F   1C03           00085     btfss   STATUS, C
-0020   2???           00086     goto    doz
-MPASM 5.86                       PROGRAM.ASM   11-7-2019  20:16:44         PAGE  3
+0007   0085           00049         movwf       TRISA       ; Todos os 5 bits da porta A serão usados como 
+                      00050                                 ; saída.
+0008   1283           00051         bcf         STATUS, RP0 ; Seleciona o banco 0.
+                      00052 ;
+                      00053 ; Aplicação principal inicia agora.
+0009                  00054 init:
+0009   2???           00055         call        delay2s     ; Aguarda 2 segundos.
+000A   0806           00056         movf        PORTB, 0    ; Armazena o valor de entrada no reg. W.
+000B   00A0           00057         movwf       TEMP        ; Esse número é armazenado na porta B.
+                      00058 ;
+                      00059 ; Como não podemos utilizar D'-1', passamos o binário 1111 aos contadores como
+                      00060 ; inicialização. Ao receber um incremento os 4 primeiros bits serão zerados 
+                      00061 ; (1111 + 0001 = 1 0000). Portanto, quando incrementarmos, zeramos o bit 4 de 
+                      00062 ; cada um para evitar problemas.
+000C   300F           00063         movlw       B'1111'
+000D   00A1           00064         movwf       HUNDRED
+000E   00A2           00065         movwf       DOZEN
+000F   00A3           00066         movwf       UNITY
+                      00067 ;
+                      00068 ; Ciclo de definição da centena.
+                      00069 ; A cada ciclo, subtrai 100 do valor original e incrementa o contador até que
+                      00070 ; ocorra um carry no registrador STATUS, ou seja, a centena já foi totalmente
+                      00071 ; contada. Por exemplo, 255 entrará no laço 2 vezes e o contador será incremen-
+                      00072 ; 2 vezes. Logo, o reg. da centena armazenará o valor 2.
+0010                  00073 hund:
+0010   0AA1           00074         incf        HUNDRED, 1  ; Incrementa o contador.
+0011   1221           00075         bcf         HUNDRED, 4  ; Zera o bit onde o carry ocorreu.
+0012   3064           00076         movlw       D'100'      ; W = 100.
+0013   02A0           00077         subwf       TEMP, 1     ; Temp = Temp - W = Temp - 100.
+0014   1803           00078         btfsc       STATUS, C   ; Se o bit de carry estiver falso, pula o laço.
+0015   2???           00079         goto        hund
+0016   3064           00080         movlw       D'100'
+0017   07A0           00081         addwf       TEMP, 1     ; Soma 100 ao valor obtido na última subtração
+                      00082                                 ; para retornar ao valor antes do carry (< 0).
+                      00083 ;
+                      00084 ; Ciclo de definição da dezena.
+                      00085 ; Segue a mesma lógica da centena.
+0018                  00086 doz:
+0018   0AA2           00087         incf        DOZEN, 1
+0019   1222           00088         bcf         DOZEN, 4
+001A   300A           00089         movlw       D'10'
+001B   02A0           00090         subwf       TEMP, 1
+001C   1803           00091         btfsc       STATUS, C
+001D   2???           00092         goto        doz
+001E   300A           00093         movlw       D'10'
+MPASM 5.86                       PROGRAM.ASM   11-21-2019  22:38:20         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0021   0820           00087     movf    COUNTER, 0
-0022   00A2           00088     movwf   DOZEN
-                      00089 ; Não é necessário somar 10 para retornar ao valor original, pois o restante já
-                      00090 ; será a unidade.
-0023   300F           00091     movlw   B'1111'
-0024   00A0           00092     movwf   COUNTER     ; Reinicia, novamente, o contador.
-                      00093 ;
-                      00094 ; Ciclo de definição da unidade.
-                      00095 ; Novamente, a mesma ideia.
-0025                  00096 uni:
-0025   0AA0           00097     incf    COUNTER, 1
-0026   1220           00098     bcf     COUNTER, 4
-0027   3001           00099     movlw   D'1'
-0028   0286           00100     subwf   PORTB, 1
-0029   1C03           00101     btfss   STATUS, C
-002A   2???           00102     goto    uni
-002B   0820           00103     movf    COUNTER, 0
-002C   00A3           00104     movwf   UNITY
-                      00105 ;
-                      00106 ; Exibição alternada dos dígitos BCD na porta A.
-002D   0821           00107     movf    HUNDRED, 0  ; W = centena.
-002E   0085           00108     movwf   PORTA       ; Exibe o dígito da centena na porta A.
-Error[113]  : Symbol not previously defined (delay5ms)
-002F   2000           00109     call    delay5ms    ; Espera 5 ms.
-                      00110 ;
-0030   0822           00111     movf    DOZEN, 0    ; W = dezena.
-0031   0085           00112     movwf   PORTA       ; Exibe o dígito da dezena na porta A.
-Error[113]  : Symbol not previously defined (delay5ms)
-0032   2000           00113     call    delay5ms
-                      00114 ;
-0033   0823           00115     movf    UNITY, 0    ; W = unidade.
-0034   0085           00116     movwf   PORTA       ; Exibe o dígito da unidade na porta A.
-Error[113]  : Symbol not previously defined (delay5ms)
-0035   2000           00117     call    delay5ms
-                      00118 ;
-0036   2???           00119     goto    init        ; Volta ao início (espera de 2 s para o próximo valor).
-3FF1                  00120     end
-MPASM 5.86                       PROGRAM.ASM   11-7-2019  20:16:44         PAGE  4
+001F   07A0           00094         addwf       TEMP, 1
+                      00095 ;
+                      00096 ; A unidade já estará definida no registrador TEMP.
+0020   0820           00097         movf        TEMP, 0
+0021   00A3           00098         movwf       UNITY
+                      00099 ;
+                      00100 ; Exibição alternada dos dígitos BCD na porta A.
+0022   0821           00101         movf        HUNDRED, 0  ; W = centena.
+0023   0085           00102         movwf       PORTA       ; Exibe o dígito da centena na porta A.
+0024   2???           00103         call        delay5ms    ; Espera 5 ms.
+                      00104 ;
+0025   0822           00105         movf        DOZEN, 0    ; W = dezena.
+0026   0085           00106         movwf       PORTA       ; Exibe o dígito da dezena na porta A.
+0027   2???           00107         call        delay5ms
+                      00108 ;
+0028   0823           00109         movf        UNITY, 0    ; W = unidade.
+0029   0085           00110         movwf       PORTA       ; Exibe o dígito da unidade na porta A.
+002A   2???           00111         call        delay5ms
+                      00112 ;
+002B   2???           00113         goto        init        ; Volta ao início (espera de 2 s para o próximo 
+                      00114                                 ; valor).
+                      00115 ;
+                      00116 ; Timer de 1 ms.
+                      00117 ; 4MHz  -> 4.000.000 ciclos de software p/ segundo 
+                      00118 ;       -> 2.000.000 ciclos de máquina p/ segundo
+                      00119 ;       -> 2.000 ciclos de máquina p/ milisegundo.
+                      00120 ;               
+                      00121 ; 1 passada     -> 8 ciclos
+                      00122 ; x passadas    -> 2.000 ciclos
+                      00123 ;
+                      00124 ; 2.000 ciclos = 8 passadas -> passadas = 2.000/8 -> 250 passadas necessárias.
+002C                  00125 delay1ms:
+002C   30FA           00126         movlw       D'250'
+002D   00A4           00127         movwf       DELCUT1MS
+                      00128 ; As seguintes instruções gastam 8 ciclos de máquina.
+002E                  00129 del1ms:
+002E   0000           00130         nop
+002F   0000           00131         nop
+0030   0000           00132         nop
+0031   0000           00133         nop
+0032   0000           00134         nop
+0033   0BA4           00135         decfsz      DELCUT1MS, 1   ; Pula a instrução goto caso o contador seja 
+                      00136                                    ; zerado.
+0034   2???           00137         goto        del1ms
+0035   0008           00138         return
+                      00139 ;
+                      00140 ; Timer de 5 ms.
+                      00141 ; Chama 5 vezes o delay de 1 ms.
+0036                  00142 delay5ms:
+0036   2???           00143         call        delay1ms
+0037   2???           00144         call        delay1ms
+0038   2???           00145         call        delay1ms
+0039   2???           00146         call        delay1ms
+MPASM 5.86                       PROGRAM.ASM   11-21-2019  22:38:20         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+003A   2???           00147         call        delay1ms
+003B   0008           00148         return
+                      00149 ;
+                      00150 ; Timer de 1 s.
+                      00151 ; Ao executar 2 vezes o timer de 5 ms, temos 10 ms. Executando 10 ms 100 vezes,
+                      00152 ; temos 1 segundo (1.000 ms).
+003C                  00153 delay1s:
+003C   3064           00154         movlw       D'100'
+003D   00A5           00155         movwf       DELCUT1S
+003E                  00156 del1s:
+003E   2???           00157         call        delay5ms
+003F   2???           00158         call        delay5ms
+0040   0BA5           00159         decfsz      DELCUT1S, 1
+0041   2???           00160         goto        del1s
+0042   0008           00161         return
+                      00162 ;
+                      00163 ; Timer de 2 s.
+                      00164 ; Chama 2 vezes o delay de 1 s.
+0043                  00165 delay2s:
+0043   2???           00166         call        delay1s
+0044   2???           00167         call        delay1s
+0045   0008           00168         return
+                      00169         
+3FF1                  00170         end                         ; Fim de programa.
+MPASM 5.86                       PROGRAM.ASM   11-21-2019  22:38:20         PAGE  5
 
 
 SYMBOL TABLE
@@ -218,7 +264,7 @@ CHS1                              00000004
 CHS2                              00000005
 CIS                               00000003
 CKE                               00000006
-MPASM 5.86                       PROGRAM.ASM   11-7-2019  20:16:44         PAGE  5
+MPASM 5.86                       PROGRAM.ASM   11-21-2019  22:38:20         PAGE  6
 
 
 SYMBOL TABLE
@@ -231,7 +277,6 @@ CM2                               00000002
 CMCON                             0000009C
 CMIE                              00000006
 CMIF                              00000006
-COUNTER                           00000020
 CREN                              00000004
 CSRC                              00000007
 CVR0                              00000000
@@ -277,13 +322,13 @@ INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
 INTF                              00000001
-MPASM 5.86                       PROGRAM.ASM   11-7-2019  20:16:44         PAGE  6
+IRP                               00000007
+MPASM 5.86                       PROGRAM.ASM   11-21-2019  22:38:20         PAGE  7
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-IRP                               00000007
 NOT_A                             00000005
 NOT_ADDRESS                       00000005
 NOT_BO                            00000000
@@ -336,13 +381,13 @@ RB3                               00000003
 RB4                               00000004
 RB5                               00000005
 RB6                               00000006
-MPASM 5.86                       PROGRAM.ASM   11-7-2019  20:16:44         PAGE  7
+RB7                               00000007
+MPASM 5.86                       PROGRAM.ASM   11-21-2019  22:38:20         PAGE  8
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-RB7                               00000007
 RBIE                              00000003
 RBIF                              00000000
 RC0                               00000000
@@ -395,13 +440,13 @@ T0CS                              00000005
 T0IE                              00000005
 T0IF                              00000002
 T0SE                              00000004
-MPASM 5.86                       PROGRAM.ASM   11-7-2019  20:16:44         PAGE  8
+T1CKPS0                           00000004
+MPASM 5.86                       PROGRAM.ASM   11-21-2019  22:38:20         PAGE  9
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-T1CKPS0                           00000004
 T1CKPS1                           00000005
 T1CON                             00000010
 T1INSYNC                          00000002
@@ -410,6 +455,7 @@ T1SYNC                            00000002
 T2CKPS0                           00000000
 T2CKPS1                           00000001
 T2CON                             00000012
+TEMP                              00000020
 TMR0                              00000001
 TMR0IE                            00000005
 TMR0IF                            00000002
@@ -454,7 +500,7 @@ TRISC5                            00000005
 TRISC6                            00000006
 TRISC7                            00000007
 TRMT                              00000001
-MPASM 5.86                       PROGRAM.ASM   11-7-2019  20:16:44         PAGE  9
+MPASM 5.86                       PROGRAM.ASM   11-21-2019  22:38:20         PAGE 10
 
 
 SYMBOL TABLE
@@ -513,7 +559,7 @@ _WRT_1FOURTH                      00003BFF
 _WRT_256                          00003DFF
 _WRT_HALF                         000039FF
 _WRT_OFF                          00003FFF
-MPASM 5.86                       PROGRAM.ASM   11-7-2019  20:16:44         PAGE 10
+MPASM 5.86                       PROGRAM.ASM   11-21-2019  22:38:20         PAGE 11
 
 
 SYMBOL TABLE
@@ -523,14 +569,19 @@ _XT_OSC                           00003FFD
 __16F873A                         00000001
 __DEBUG                           
 __MPLAB_DEBUGGER_SIMULATOR        1
-doz                               0000001B
-hund                              0000000F
-init                              0000000A
+del1ms                            0000002E
+del1s                             0000003E
+delay1ms                          0000002C
+delay1s                           0000003C
+delay2s                           00000043
+delay5ms                          00000036
+doz                               00000018
+hund                              00000010
+init                              00000009
 start                             00000001
-uni                               00000025
 
-Errors   :     4
-Warnings :     6 reported,     0 suppressed
+Errors   :     0
+Warnings :     0 reported,     0 suppressed
 Messages :     3 reported,     0 suppressed
 
 

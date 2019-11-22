@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=bcd_displayer.X
+PROJECTNAME=bcd_display.X
 
 # Active Configuration
 DEFAULTCONF=default
