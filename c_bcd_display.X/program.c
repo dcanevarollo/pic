@@ -65,12 +65,12 @@ void showOutput(unsigned char hundred, unsigned char ten, unsigned char unit) {
  * Função principal.
  */
 void main(void) {
+    unsigned char input, hundred, ten, unit;
+    
     /* Configurações do banco 1. */
     ADCON1 = 0x6;
     TRISA = 0x00;  // Porta A como saída.
     TRISB = 0xFF;  // Porta B como entrada.
-    
-    unsigned char input, hundred, ten, unit;
     
     while (true) {
         /* Armazena o valor de entrada. */
