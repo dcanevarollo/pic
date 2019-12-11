@@ -1,0 +1,146 @@
+[p GLOBOPT AUTOSTATIC IEEE_DBL IEEE_FLT PIC14 PICREGULAR PICMID ]
+[d version 1.1 ]
+[d edition pro ]
+[d chip 16F873A ]
+[d frameptr 0 ]
+"5 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\awdiv.c
+[v ___awdiv __awdiv `(i  1 e 2 0 ]
+"5 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\awmod.c
+[v ___awmod __awmod `(i  1 e 2 0 ]
+"477 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\doprnt.c
+[v _printf printf `(i  1 e 2 0 ]
+"5 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\lwdiv.c
+[v ___lwdiv __lwdiv `(ui  1 e 2 0 ]
+"5 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\lwmod.c
+[v ___lwmod __lwmod `(ui  1 e 2 0 ]
+"7 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\putch.c
+[v _putch putch `(v  1 e 1 0 ]
+"10 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\sprcadd.c
+[v ___fladd __fladd `(d  1 e 4 0 ]
+"4 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\Umul8_16.c
+[v __Umul8_16 _Umul8_16 `(ui  1 e 2 0 ]
+"6 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\pic\__eeprom.c
+[v ___eecpymem __eecpymem `(v  1 e 1 0 ]
+"39
+[v ___memcpyee __memcpyee `(v  1 e 1 0 ]
+"36 C:\Users\dougl\Documents\GitHub\pic\c_bcd_display.X\program.c
+[v _showPortA showPortA `(v  1 e 1 0 ]
+"43
+[v _showOutput showOutput `(v  1 e 1 0 ]
+"55
+[v _main main `(v  1 e 1 0 ]
+"166 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\include\pic16f873a.h
+[v _PORTA PORTA `VEuc  1 e 1 @5 ]
+"216
+[v _PORTB PORTB `VEuc  1 e 1 @6 ]
+"1225
+[v _TRISA TRISA `VEuc  1 e 1 @133 ]
+"1275
+[v _TRISB TRISB `VEuc  1 e 1 @134 ]
+"2004
+[v _ADCON1 ADCON1 `VEuc  1 e 1 @159 ]
+"358 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\doprnt.c
+[v _dpowers dpowers `DC[5]ui  1 s 10 dpowers ]
+"55 C:\Users\dougl\Documents\GitHub\pic\c_bcd_display.X\program.c
+[v _main main `(v  1 e 1 0 ]
+{
+"61
+[v main@input input `uc  1 a 1 30 ]
+[v main@unit unit `uc  1 a 1 29 ]
+[v main@ten ten `uc  1 a 1 28 ]
+[v main@hundred hundred `uc  1 a 1 27 ]
+"80
+} 0
+"43
+[v _showOutput showOutput `(v  1 e 1 0 ]
+{
+[v showOutput@hundred hundred `uc  1 a 1 wreg ]
+"44
+[v showOutput@i i `i  1 a 2 6 ]
+"43
+[v showOutput@hundred hundred `uc  1 a 1 wreg ]
+[v showOutput@ten ten `uc  1 p 1 3 ]
+[v showOutput@unit unit `uc  1 p 1 4 ]
+"46
+[v showOutput@hundred hundred `uc  1 a 1 5 ]
+"53
+} 0
+"36
+[v _showPortA showPortA `(v  1 e 1 0 ]
+{
+[v showPortA@value value `uc  1 a 1 wreg ]
+[v showPortA@value value `uc  1 a 1 wreg ]
+[v showPortA@value value `uc  1 a 1 2 ]
+"41
+} 0
+"477 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\doprnt.c
+[v _printf printf `(i  1 e 2 0 ]
+{
+[v printf@f f `*.24DCuc  1 a 1 wreg ]
+"545
+[v printf@val val `ui  1 a 2 21 ]
+"512
+[v printf@c c `uc  1 a 1 23 ]
+"521
+[v printf@prec prec `c  1 a 1 19 ]
+"525
+[v printf@flag flag `uc  1 a 1 18 ]
+"479
+[v printf@ap ap `[1]*.4v  1 a 1 17 ]
+"477
+[v printf@f f `*.24DCuc  1 a 1 wreg ]
+"550
+[v printf@f f `*.24DCuc  1 a 1 20 ]
+"1567
+} 0
+"7 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\putch.c
+[v _putch putch `(v  1 e 1 0 ]
+{
+"9
+} 0
+"5 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\lwmod.c
+[v ___lwmod __lwmod `(ui  1 e 2 0 ]
+{
+"10
+[v ___lwmod@counter counter `uc  1 a 1 13 ]
+"5
+[v ___lwmod@divisor divisor `ui  1 p 2 8 ]
+[v ___lwmod@dividend dividend `ui  1 p 2 10 ]
+"25
+} 0
+"5 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\lwdiv.c
+[v ___lwdiv __lwdiv `(ui  1 e 2 0 ]
+{
+"10
+[v ___lwdiv@quotient quotient `ui  1 a 2 5 ]
+"11
+[v ___lwdiv@counter counter `uc  1 a 1 7 ]
+"5
+[v ___lwdiv@divisor divisor `ui  1 p 2 0 ]
+[v ___lwdiv@dividend dividend `ui  1 p 2 2 ]
+"30
+} 0
+"5 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\awmod.c
+[v ___awmod __awmod `(i  1 e 2 0 ]
+{
+"10
+[v ___awmod@sign sign `uc  1 a 1 6 ]
+[v ___awmod@counter counter `uc  1 a 1 5 ]
+"5
+[v ___awmod@divisor divisor `i  1 p 2 0 ]
+[v ___awmod@dividend dividend `i  1 p 2 2 ]
+"34
+} 0
+"5 C:\Program Files (x86)\Microchip\xc8\v2.10\pic\sources\c90\common\awdiv.c
+[v ___awdiv __awdiv `(i  1 e 2 0 ]
+{
+"10
+[v ___awdiv@quotient quotient `i  1 a 2 7 ]
+"11
+[v ___awdiv@sign sign `uc  1 a 1 6 ]
+[v ___awdiv@counter counter `uc  1 a 1 5 ]
+"5
+[v ___awdiv@divisor divisor `i  1 p 2 0 ]
+[v ___awdiv@dividend dividend `i  1 p 2 2 ]
+"41
+} 0
